@@ -1,0 +1,17 @@
+{
+    "name": "student/app",
+    "description": "geekbrains",
+    "autoload": {
+        "psr-4": {
+            "Student\\App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "student"
+        }
+    ],
+    "require": {
+        "fakerphp/faker": "^1.20"
+    }
+}
