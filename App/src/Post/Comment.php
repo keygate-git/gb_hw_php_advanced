@@ -4,16 +4,38 @@ namespace Student\App\Post;
 
 use Student\App\Post\Post;
 use Student\App\User\User;
+use Student\App\User\UUID;
 
-class Comment extends Post{
-    private string $postId;
+class Comment {
+    private UUID $id;
+    private UUID $authorId;
+    private UUID $postId;
+    private string $text;
 
-    public function __construct(User $user, Post $post, $text)
+    public function __construct(UUID $id, UUID $authorId, UUID $postId, string $text)
     {
-        $this->id = 1;
-        $this->authorId = $user->getId();
-        $this->postId = $post->getId();
+        $this->id = $id;
+        $this->authorId = $authorId;
+        $this->postId = $postId;
         $this->text = $text;
+    }
+
+    public function getId(): UUID
+    {
+        $id = $this->id;
+        return $id;
+    }
+
+    public function getPostId(): UUID
+    {
+        $postId = $this->postId;
+        return $postId;
+    }
+
+    public function getAuthorId(): UUID
+    {
+        $authorId = $this->authorId;
+        return $authorId;
     }
 
     public function getText(): string

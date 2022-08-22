@@ -3,31 +3,44 @@
 namespace Student\App\Post;
 
 use Student\App\User\User;
+use Student\App\User\UUID;
 
 class Post {
-    private int $id;
-    private string $authorId;
+    private UUID $id;
+    private UUID $authorId;
     private string $title;
     private string $text;
 
-    public function __construct(User $user, string $title, string $text)
+    public function __construct(UUID $id, UUID $authorId, string $title, string $text)
     {
-        $this->id = 1;
-        $this->authorId = $user->getId();
+        $this->id = $id;
+        $this->authorId = $authorId;
         $this->title = $title;
         $this->text = $text;
     }
 
-    public function getData(): ?string
+    public function getTitle(): ?string
     {
-        $data = $this->title . " >>> " . $this->text;
-        return $data;
+        $title = $this->title;
+        return $title;
     }
 
-    public function getId(): int
+    public function getText(): ?string
+    {
+        $text = $this->text;
+        return $text;
+    }
+
+    public function getId(): UUID
     {
         $id = $this->id;
         return $id;
+    }
+
+    public function getAuthorId(): UUID
+    {
+        $authorId = $this->authorId;
+        return $authorId;
     }
 
 }

@@ -2,25 +2,41 @@
 
 namespace Student\App\User;
 
+use Student\App\User\UUID;
+
 class User {
-    private int $id;
+    private UUID $id;
+    private string $username;
     private string $lastName;
     private string $firstName;
 
-    public function __construct(string $lastName, string $firstName)
+    public function __construct(UUID $id, string $username, string $lastName, string $firstName)
     {
-        $this->id = 1;
+        $this->id = $id;
+        $this->username = $username;;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
     }
 
-    public function getName(): string
+    public function getUsername(): string
     {
-        $name = $this->lastName . ' ' . $this->firstName;
-        return $name;
+        $username = $this->username;
+        return $username;
     }
 
-    public function getId(): int
+    public function getFirstName(): string
+    {
+        $firstName = $this->firstName;
+        return $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        $lastName = $this->lastName;
+        return $lastName;
+    }
+
+    public function getId(): UUID
     {
         $id = $this->id;
         return $id;

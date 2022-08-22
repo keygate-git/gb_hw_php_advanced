@@ -8,11 +8,13 @@ class ComposerStaticInitf93ecde44ef58ed902d766c46bccc33c
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'Symfony\\Polyfill\\Uuid\\' => 22,
             'Student\\App\\' => 12,
         ),
         'P' => 
@@ -26,6 +28,10 @@ class ComposerStaticInitf93ecde44ef58ed902d766c46bccc33c
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-uuid',
+        ),
         'Student\\App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',

@@ -46,5 +46,14 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'symfony/polyfill-uuid' => array(
+            'pretty_version' => 'v1.26.0',
+            'version' => '1.26.0.0',
+            'reference' => 'a41886c1c81dc075a09c71fe6db5b9d68c79de23',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-uuid',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
 );
