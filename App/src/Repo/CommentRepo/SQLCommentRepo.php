@@ -5,6 +5,7 @@ namespace Student\App\Repo\CommentRepo;
 use Student\App\Post\Comment;
 use Student\App\User\UUID;
 use Student\App\Exceptions\CommentNotFoundException;
+use Student\App\Exceptions\CommentCreatedExeption;
 use PDO;
 
 class SQLCommentRepo implements CommentRepositoryInterface
@@ -29,6 +30,8 @@ class SQLCommentRepo implements CommentRepositoryInterface
             ':post_id' => (string) $comment->getPostId(),
             ':text' => $comment->getText(),
         ]);
+
+        throw new CommentCreatedExeption("Comment successfully created");
     }
 
     public function getComment(UUID $uuid): Comment

@@ -5,6 +5,7 @@ namespace Student\App\Repo\PostRepo;
 use Student\App\Post\Post;
 use Student\App\User\UUID;
 use Student\App\Exceptions\PostNotFoundException;
+use Student\App\Exceptions\PostCreatedExeption;
 use PDO;
 
 class SQLPostRepo implements PostRepositoryInterface
@@ -29,6 +30,8 @@ class SQLPostRepo implements PostRepositoryInterface
             ':title' => $post->getTitle(),
             ':text' => $post->getText(),
         ]);
+
+        throw new PostCreatedExeption("Post successfully created");
     }
 
     public function getPost(?UUID $uuid): Post
