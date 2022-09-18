@@ -31,7 +31,7 @@ class SQLPostRepo implements PostRepositoryInterface
             ':text' => $post->getText(),
         ]);
 
-        throw new PostCreatedExeption("Post successfully created");
+        // throw new PostCreatedExeption("Post successfully created");
     }
 
     public function getPost(?UUID $uuid): Post
@@ -61,5 +61,32 @@ class SQLPostRepo implements PostRepositoryInterface
 
         return new Post(new UUID($result['id']), new UUID($result['author_id']), $result['title'], $result['text']);
 
+    }
+
+    public function deletePost(UUID $uuid): void
+    {
+        if (null === $uuid) {
+            throw new PostNotFoundException (
+                "Cannot delete post: null"
+            );
+        };
+
+        // $statement = $this->connection->prepare(
+        //     'DELETE FROM posts WHERE id = :id'
+        // );
+
+        // $result = $statement->execute([
+        //     ':id' => (string) $uuid,
+        // ]);
+
+        $id = (string) $uuid;
+
+        $result = $this->connection->exec("DELETE FROM posts WHERE id = ('$id')");
+
+        if ($result == 0) {
+            throw new PostNotFoundException (
+                "Cannot find post to delete: $uuid"
+            );
+        };
     }
 }

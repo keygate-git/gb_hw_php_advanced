@@ -34,7 +34,7 @@ class SQLUserRepo implements UsersRepositoryInterface
     public function getUser(UUID $uuid): User 
     {
         $statement = $this->connection->prepare(
-            'SELECT * FROM users WHERE id = ?'
+            'SELECT * FROM users WHERE id = :id'
         );
 
         $statement->execute([

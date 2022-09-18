@@ -31,7 +31,7 @@ class SQLCommentRepo implements CommentRepositoryInterface
             ':text' => $comment->getText(),
         ]);
 
-        throw new CommentCreatedExeption("Comment successfully created");
+        // throw new CommentCreatedExeption("Comment successfully created");
     }
 
     public function getComment(UUID $uuid): Comment
