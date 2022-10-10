@@ -17,6 +17,7 @@ class ComposerStaticInitf93ecde44ef58ed902d766c46bccc33c
         'S' => 
         array (
             'Symfony\\Polyfill\\Uuid\\' => 22,
+            'Student\\App\\UnitTests\\' => 22,
             'Student\\App\\' => 12,
         ),
         'P' => 
@@ -39,6 +40,10 @@ class ComposerStaticInitf93ecde44ef58ed902d766c46bccc33c
         'Symfony\\Polyfill\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-uuid',
+        ),
+        'Student\\App\\UnitTests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
         ),
         'Student\\App\\' => 
         array (

@@ -32,3 +32,11 @@ $query = 'CREATE TABLE comments (
 )';
 
 $connection->exec($query);
+
+$query = 'CREATE TABLE likes (
+    id TEXT NOT NULL PRIMARY KEY,
+    author_id TEXT NOT NULL,
+    post_id TEXT NOT NULL
+)';
+
+$connection->exec($query);

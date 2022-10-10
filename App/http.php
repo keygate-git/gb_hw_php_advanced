@@ -8,14 +8,18 @@ use Student\App\Exceptions\AppException;
 use Student\App\Http\Actions\Users\FindByUsername;
 use Student\App\Http\Actions\Posts\CreatePost;
 use Student\App\Http\Actions\Posts\DeletePost;
+use Student\App\Http\Actions\Likes\CreateLike;
 use Student\App\Http\Actions\Comments\CreateComment;
 use Student\App\Repo\UserRepo\SQLUserRepo;
 use Student\App\Repo\PostRepo\SQLPostRepo;
 use Student\App\Repo\CommentRepo\SQLCommentRepo;
+use Student\App\Repo\LikeRepo\SQLLikeRepo;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$connection = require 'db.php';
+// $connection = require 'db.php';
+
+$container = require __DIR__ . '/bootstrap.php';
 
 $request = new Request($_GET, $_SERVER, file_get_contents('php://input'));
 
@@ -50,15 +54,20 @@ try {
 
 $routes = [
     'GET' => [
-        '/users/show' => new FindByUsername(new SQLUserRepo($connection)),
+        //'/users/show' => new FindByUsername(new SQLUserRepo($connection)),
+        '/users/show' => FindByUsername::class,
         // '/posts/show' => new FindByUuid(new SQLPostRepo($connection))
     ],
     'POST' => [
-        '/posts/create' => new CreatePost(new SQLUserRepo($connection), new SQLPostRepo($connection)),
-        '/posts/comment' => new CreateComment(new SQLUserRepo($connection), new SQLPostRepo($connection), new SQLCommentRepo($connection))
+        //'/posts/create' => new CreatePost(new SQLUserRepo($connection), new SQLPostRepo($connection)),
+        '/posts/create' => CreatePost::class,
+        //'/posts/comment' => new CreateComment(new SQLUserRepo($connection), new SQLPostRepo($connection), new SQLCommentRepo($connection))
+        '/posts/comment' => CreateComment::class,
+        '/posts/like' => CreateLike::class,
     ],
     'DELETE' => [
-        '/posts' => new DeletePost(new SQLPostRepo($connection))
+        //'/posts' => new DeletePost(new SQLPostRepo($connection))
+        '/posts' => DeletePost::class
     ]
 ];
 
@@ -72,7 +81,9 @@ if (!array_key_exists($path, $routes[$method])) {
     return;
 }
 
-$action = $routes[$method][$path];
+$actionClassName = $routes[$method][$path];
+
+$action = $container->get($actionClassName);
 
 try {
     $response = $action->handle($request);

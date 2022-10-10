@@ -31,7 +31,7 @@ class CreateUserCommand
             $username,
             $input['last_name'],
             $input['first_name']
-        ));            
+        ));
     }
 
     private function userExists(string $username): bool

@@ -29,6 +29,8 @@ class SQLUserRepo implements UsersRepositoryInterface
             ':first_name' => $user->getFirstName(),
             ':last_name' => $user->getLastName(),
         ]);
+
+        var_dump($user);
     }
 
     public function getUser(UUID $uuid): User 

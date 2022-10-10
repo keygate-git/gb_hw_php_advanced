@@ -18,13 +18,17 @@ use Student\App\Exceptions\CommandException;
 use Student\App\Exceptions\UserNotFoundException;
 use Student\App\Exceptions\PostNotFoundException;
 
-$connection = require 'db.php';
+// $connection = require 'db.php';
+
+$container = require __DIR__ . '/bootstrap.php';
 
 switch ($argv[1]) {
     case 'user':
-        $userRepository = new SQLUserRepo($connection);
+        // $userRepository = new SQLUserRepo($connection);
 
-        $command = new CreateUserCommand($userRepository);
+        // $command = new CreateUserCommand($userRepository);
+
+        $command = $container->get(CreateUserCommand::class);
 
         try {
             $command->handle(UserArguments::parseRawInput($argv));
@@ -34,7 +38,9 @@ switch ($argv[1]) {
         break;
 
     case 'post':
-        $userRepository = new SQLUserRepo($connection);
+        // $userRepository = new SQLUserRepo($connection);
+
+        $userRepository = $container->get(SQLUserRepo::class);
 
         try {
             $user = $userRepository->getByUsername($argv[2]);
@@ -43,13 +49,15 @@ switch ($argv[1]) {
             break;
         }
 
-        $id = (string) $user->getId();
+        $id = (string) $user->getIdtitle();
 
         $argv[2] = $id;
 
-        $postRepository = new SQLPostRepo($connection);
+        // $postRepository = new SQLPostRepo($connection);
 
-        $command = new CreatePostCommand($postRepository);
+        // $command = new CreatePostCommand($postRepository);
+
+        $command = $container->get(CreatePostCommand::class);
 
         try {
             $command->handle(PostArguments::parseRawInput($argv));
@@ -59,7 +67,9 @@ switch ($argv[1]) {
         break;
 
     case 'comment':
-        $userRepository = new SQLUserRepo($connection);
+        // $userRepository = new SQLUserRepo($connection);
+
+        $userRepository = $container->get(SQLUserRepo::class);
 
         try {
             $user = $userRepository->getByUsername($argv[2]);
@@ -72,7 +82,9 @@ switch ($argv[1]) {
 
         $argv[2] = $id;
 
-        $postRepository = new SQLPostRepo($connection);
+        // $postRepository = new SQLPostRepo($connection);
+
+        $postRepository = $container->get(SQLPostRepo::class);
 
         try {
             $post = $postRepository->getPost(new UUID($argv[3]));
@@ -81,9 +93,11 @@ switch ($argv[1]) {
             break;
         }
 
-        $commentRepository = new SQLCommentRepo($connection);
+        // $commentRepository = new SQLCommentRepo($connection);
 
-        $command = new CreateCommentCommand($commentRepository);
+        // $command = new CreateCommentCommand($commentRepository);
+
+        $command = $container->get(CreateCommentCommand::class);
 
         try {
             $command->handle(CommentArguments::parseRawInput($argv));

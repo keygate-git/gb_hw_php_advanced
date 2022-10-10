@@ -1,8 +1,8 @@
 <?php
 
-namespace Student\App\Repo\CommentRepo;
+namespace Student\App\Repo\LikeRepo;
 
-use Student\App\Post\Comment;
+use Student\App\Post\Like;
 use Student\App\User\UUID;
 
 interface CommentRepositoryInterface

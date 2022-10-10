@@ -6,6 +6,11 @@
             "Student\\App\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Student\\App\\UnitTests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "student"
