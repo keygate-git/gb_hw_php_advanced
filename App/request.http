@@ -1,0 +1,28 @@
+# GET http://127.0.0.1:8000/users/show?username=login
+# Some-Header: Some Value
+# Cookie: XDEBUG_SESSION=start
+
+# POST http://127.0.0.1:8000/posts/create
+
+# {
+#    "author_uuid": "aee2d450-7470-4f56-88e6-60fc58f7e1c0",
+#    "text": "some text",
+#    "title": "some title"
+# }
+
+# POST http://127.0.0.1:8000/posts/comment
+
+# {
+#     "author_uuid": "a4b4601e-736d-4098-a2d6-13097614af83",
+#     "post_uuid": "539bc4f3-40c3-4959-af3f-64e01c7e128b",
+#     "text": "some comment"
+# }
+
+# DELETE  http://127.0.0.1:8000/posts?uuid=406811b6-cc5a-401e-9eef-1c36744b6fcc
+
+POST http://127.0.0.1:8000/posts/like
+
+{
+    "author_uuid": "9b74660e-5bbd-49c0-91a5-728bad66ee68",
+    "post_uuid": "539bc4f3-40c3-4959-af3f-64e01c7e128b"
+}
