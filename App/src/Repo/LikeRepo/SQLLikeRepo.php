@@ -8,14 +8,17 @@ use Student\App\Exceptions\LikeNotFoundException;
 use Student\App\Exceptions\LikeCreatedExeption;
 use Student\App\Repo\LikeRepo\LikeRepositoryInterface;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SQLLikeRepo implements LikeRepositoryInterface
 {
     private PDO $connection;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $connection) 
+    public function __construct(PDO $connection, LoggerInterface $logger) 
     {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     public function save(Like $like): void
@@ -25,12 +28,15 @@ class SQLLikeRepo implements LikeRepositoryInterface
             VALUES (:id, :author_id, :post_id)'
         );
 
+        $uuid = (string) $like->getId();
+
         $statement->execute([
-            ':id' => (string) $like->getId(),
+            ':id' => $uuid,
             ':author_id' => (string) $like->getAuthorId(),
             ':post_id' => (string) $like->getPostId()
         ]);
 
+        $this->logger->info("Like created: $uuid");
         // throw new CommentCreatedExeption("Comment successfully created");
     } 
 
@@ -49,6 +55,7 @@ class SQLLikeRepo implements LikeRepositoryInterface
         $likes = $statement->fetchAll();
 
         if (false === $likes) {
+            $this->logger->warning("Likes not found for: $uuid");
             throw new LikeNotFoundException (
                 "Cannot get likes for: $uuid"
             );

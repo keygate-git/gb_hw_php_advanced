@@ -14,12 +14,15 @@ use Student\App\Repo\UserRepo\SQLUserRepo;
 use Student\App\Repo\PostRepo\SQLPostRepo;
 use Student\App\Repo\CommentRepo\SQLCommentRepo;
 use Student\App\Repo\LikeRepo\SQLLikeRepo;
+use Psr\Log\LoggerInterface;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 // $connection = require 'db.php';
 
 $container = require __DIR__ . '/bootstrap.php';
+
+$logger = $container->get(LoggerInterface::class);
 
 $request = new Request($_GET, $_SERVER, file_get_contents('php://input'));
 
@@ -40,14 +43,16 @@ $request = new Request($_GET, $_SERVER, file_get_contents('php://input'));
 try {
     $path = $request->path();
 } catch (HttpException $e) {
+    $logger->warning($e->getMessage());
     (new ErrorResponse)->send();
-
+    
     return;
 }
 
 try {
     $method = $request->method();
 } catch (HttpException $e) {
+    $logger->warning($e->getMessage());
     (new ErrorResponse)->send();
     return;
 }
@@ -72,22 +77,26 @@ $routes = [
 ];
 
 if (!array_key_exists($method, $routes)) {
+    $message = "Method not found: $method $path";
+    $logger->notice($message);
     (new ErrorResponse('Method not Found'))->send();
     return;
 }
 
 if (!array_key_exists($path, $routes[$method])) {
+    $message = "Path not found: $method $path";
+    $logger->notice($message);
     (new ErrorResponse('Path not Found'))->send();
     return;
 }
 
 $actionClassName = $routes[$method][$path];
 
-$action = $container->get($actionClassName);
-
 try {
+    $action = $container->get($actionClassName);
     $response = $action->handle($request);
 } catch (AppException $e) {
+    $logger->error($e->getMessage(), ['exception' => $e]);
     (new ErrorResponse($e->getMessage()))->send();
 }
 

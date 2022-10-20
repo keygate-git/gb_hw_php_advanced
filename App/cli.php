@@ -17,10 +17,13 @@ use Student\App\Commands\CommentArguments;
 use Student\App\Exceptions\CommandException;
 use Student\App\Exceptions\UserNotFoundException;
 use Student\App\Exceptions\PostNotFoundException;
+use Psr\Log\LoggerInterface;
 
 // $connection = require 'db.php';
 
 $container = require __DIR__ . '/bootstrap.php';
+
+$logger = $container->get(LoggerInterface::class);
 
 switch ($argv[1]) {
     case 'user':
@@ -33,7 +36,8 @@ switch ($argv[1]) {
         try {
             $command->handle(UserArguments::parseRawInput($argv));
         } catch (CommandException $e) {
-            echo "{$e->getMessage()}\n";
+            // echo "{$e->getMessage()}\n";
+            $logger->error($e->getMessage(), ['exception' => $e]);
         }
         break;
 
@@ -104,6 +108,11 @@ switch ($argv[1]) {
         } catch (CommandException $e) {
             echo "{$e->getMessage()}\n";
         }
+
+        break;
+    case 'test':
+
+        var_dump($_SERVER['SQLITE_DB_PATH']);
 
         break;
 };

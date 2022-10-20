@@ -7,14 +7,17 @@ use Student\App\User\UUID;
 use Student\App\Exceptions\PostNotFoundException;
 use Student\App\Exceptions\PostCreatedExeption;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SQLPostRepo implements PostRepositoryInterface
 {
     private PDO $connection;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $connection) 
+    public function __construct(PDO $connection, LoggerInterface $logger) 
     {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     public function save(Post $post): void
@@ -24,13 +27,16 @@ class SQLPostRepo implements PostRepositoryInterface
             VALUES (:id, :author_id, :title, :text)'
         );
 
+        $uuid = (string) $post->getId();
+
         $statement->execute([
-            ':id' => (string) $post->getId(),
+            ':id' => $uuid,
             ':author_id' => (string) $post->getAuthorId(),
             ':title' => $post->getTitle(),
             ':text' => $post->getText(),
         ]);
 
+        $this->logger->info("Post created: $uuid");
         // throw new PostCreatedExeption("Post successfully created");
     }
 
@@ -38,6 +44,7 @@ class SQLPostRepo implements PostRepositoryInterface
     {
 
         if (null === $uuid) {
+            $this->logger->warning("Post not found: null");
             throw new PostNotFoundException (
                 "Cannot get post: null"
             );
@@ -54,6 +61,7 @@ class SQLPostRepo implements PostRepositoryInterface
         $result = $statement->fetch();
 
         if (false === $result) {
+            $this->logger->warning("Post not found: $uuid");
             throw new PostNotFoundException (
                 "Cannot get post: $uuid"
             );
@@ -66,6 +74,7 @@ class SQLPostRepo implements PostRepositoryInterface
     public function deletePost(UUID $uuid): void
     {
         if (null === $uuid) {
+            $this->logger->warning("Post not found: null");
             throw new PostNotFoundException (
                 "Cannot delete post: null"
             );
@@ -84,6 +93,7 @@ class SQLPostRepo implements PostRepositoryInterface
         $result = $this->connection->exec("DELETE FROM posts WHERE id = ('$id')");
 
         if ($result == 0) {
+            $this->logger->warning("Post not found: $uuid");
             throw new PostNotFoundException (
                 "Cannot find post to delete: $uuid"
             );

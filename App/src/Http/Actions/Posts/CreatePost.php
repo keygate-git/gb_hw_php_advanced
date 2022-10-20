@@ -15,38 +15,45 @@ use Student\App\Repo\PostRepo\PostRepositoryInterface;
 use Student\App\User\User;
 use Student\App\User\UUID;
 use Student\App\Post\Post;
+use Psr\Log\LoggerInterface;
+use Student\App\Http\Auth\IdentificationInterface;
 
 class CreatePost implements ActionInterface
 {
-    private UsersRepositoryInterface $usersRepository;
+    private IdentificationInterface $identification;
     private PostRepositoryInterface $postRepository;
+    private LoggerInterface $logger;
 
-    public function __construct(UsersRepositoryInterface $usersRepository, PostRepositoryInterface $postRepository)
+    public function __construct(IdentificationInterface $identification, PostRepositoryInterface $postRepository, LoggerInterface $logger)
     {
-        $this->usersRepository = $usersRepository;
+        $this->identification = $identification;
         $this->postRepository = $postRepository;
+        $this->logger = $logger;
     }
 
     public function handle(Request $request): Response 
     {
-        try {
-            $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
-        } catch (HttpExeption | InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
+        // try {
+        //     $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
+        // } catch (HttpExeption | InvalidArgumentException $e) {
+        //     return new ErrorResponse($e->getMessage());
+        // }
 
-        try {
-            $this->usersRepository->getUser(new UUID($authorUuid));
-        } catch (UserNotFoundException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
+        // try {
+        //     $this->usersRepository->getUser(new UUID($authorUuid));
+        // } catch (UserNotFoundException $e) {
+        //     return new ErrorResponse($e->getMessage());
+        // }
+
+        $author = $this->identification->user($request);
 
         $newPostUuid = UUID::random();
 
         try {
             $post = new Post (
                 $newPostUuid,
-                $authorUuid,
+                // $authorUuid,
+                $author->getId(),
                 $request->jsonBodyField('title'),
                 $request->jsonBodyField('text'),
             );
@@ -55,6 +62,8 @@ class CreatePost implements ActionInterface
         }
 
         $this->postRepository->save($post);
+
+        $this->logger->info("Post created: $newPostUuid");
 
         return new SuccessfulResponse([
             'uuid' => (string) $newPostUuid

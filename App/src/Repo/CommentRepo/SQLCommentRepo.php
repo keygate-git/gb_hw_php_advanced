@@ -6,15 +6,19 @@ use Student\App\Post\Comment;
 use Student\App\User\UUID;
 use Student\App\Exceptions\CommentNotFoundException;
 use Student\App\Exceptions\CommentCreatedExeption;
+use Student\App\Repo\CommentRepo\CommentRepositoryInterface;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SQLCommentRepo implements CommentRepositoryInterface
 {
     private PDO $connection;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $connection) 
+    public function __construct(PDO $connection, LoggerInterface $logger) 
     {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     public function save(Comment $comment): void
@@ -24,13 +28,16 @@ class SQLCommentRepo implements CommentRepositoryInterface
             VALUES (:id, :author_id, :post_id, :text)'
         );
 
+        $uuid = (string) $comment->getId();
+
         $statement->execute([
-            ':id' => (string) $comment->getId(),
+            ':id' => $uuid,
             ':author_id' => (string) $comment->getAuthorId(),
             ':post_id' => (string) $comment->getPostId(),
             ':text' => $comment->getText(),
         ]);
 
+        $this->logger->info("Post created: $uuid");
         // throw new CommentCreatedExeption("Comment successfully created");
     }
 
@@ -47,6 +54,7 @@ class SQLCommentRepo implements CommentRepositoryInterface
         $result = $statement->fetch();
 
         if (false === $result) {
+            $this->logger->warning("Comment not found: $uuid");
             throw new CommentNotFoundException (
                 "Cannot get comment: $uuid"
             );

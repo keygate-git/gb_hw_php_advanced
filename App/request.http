@@ -1,4 +1,4 @@
-# GET http://127.0.0.1:8000/users/show?username=login
+# GET http://127.0.0.1:8000/users/show?username=username
 # Some-Header: Some Value
 # Cookie: XDEBUG_SESSION=start
 
@@ -10,19 +10,19 @@
 #    "title": "some title"
 # }
 
-# POST http://127.0.0.1:8000/posts/comment
+POST http://127.0.0.1:8000/posts/comment
 
-# {
-#     "author_uuid": "a4b4601e-736d-4098-a2d6-13097614af83",
-#     "post_uuid": "539bc4f3-40c3-4959-af3f-64e01c7e128b",
-#     "text": "some comment"
-# }
+{
+    "author_uuid": "524fd826-f9c0-4e92-b316-40f020d38618",
+    "post_uuid": "539bc4f3-40c3-4959-af3f-64e01c7e128b",
+    "text": "some comment"
+}
 
 # DELETE  http://127.0.0.1:8000/posts?uuid=406811b6-cc5a-401e-9eef-1c36744b6fcc
 
-POST http://127.0.0.1:8000/posts/like
+# POST http://127.0.0.1:8000/posts/like
 
-{
-    "author_uuid": "9b74660e-5bbd-49c0-91a5-728bad66ee68",
-    "post_uuid": "539bc4f3-40c3-4959-af3f-64e01c7e128b"
-}
+# {
+#     "author_uuid": "524fd826-f9c0-4e92-b316-40f020d38618",
+#     "post_uuid": "539bc4f3-40c3-4959-af3f-64e01c7e128b"
+# }

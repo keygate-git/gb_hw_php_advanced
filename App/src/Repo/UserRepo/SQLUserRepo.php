@@ -6,14 +6,17 @@ use Student\App\User\User;
 use Student\App\User\UUID;
 use Student\App\Exceptions\UserNotFoundException;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SQLUserRepo implements UsersRepositoryInterface
 {
     private PDO $connection;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $connection) 
+    public function __construct(PDO $connection, LoggerInterface $logger) 
     {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     public function save(User $user): void
@@ -23,14 +26,16 @@ class SQLUserRepo implements UsersRepositoryInterface
             VALUES (:id, :username, :first_name, :last_name)'
         );
 
+        $uuid = (string) $user->getId();
+
         $statement->execute([
-            ':id' => (string) $user->getId(),
+            ':id' => $uuid,
             ':username' => $user->getUsername(),
             ':first_name' => $user->getFirstName(),
             ':last_name' => $user->getLastName(),
         ]);
 
-        var_dump($user);
+        $this->logger->info("User created: $uuid");
     }
 
     public function getUser(UUID $uuid): User 
@@ -46,6 +51,7 @@ class SQLUserRepo implements UsersRepositoryInterface
         $result = $statement->fetch();
 
         if (false === $result) {
+            $this->logger->warning("User not found: $uuid");
             throw new UserNotFoundException (
                 "Cannot get user: $uuid"
             );
@@ -59,6 +65,7 @@ class SQLUserRepo implements UsersRepositoryInterface
     {
 
         if (null === $username) {
+            $this->logger->warning("User not found: null");
             throw new UserNotFoundException (
                 "Cannot get user: null"
             );
@@ -75,6 +82,7 @@ class SQLUserRepo implements UsersRepositoryInterface
         $result = $statement->fetch();
 
         if (false === $result) {
+            $this->logger->warning("User not found: $username");
             throw new UserNotFoundException (
                 "Cannot get user: $username"
             );
